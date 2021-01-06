@@ -15,7 +15,7 @@ import {Colors} from 'react-native/Libraries/NewAppScreen';
 
 declare const global: {HermesInternal: null | unknown};
 
-export const App: React.FunctionComponent = () => {
+const App = () => {
   return (
     <>
       <StatusBar barStyle="dark-content" />
@@ -61,3 +61,5 @@ const styles = StyleSheet.create({
     textAlign: 'right',
   },
 });
+
+export default App;
