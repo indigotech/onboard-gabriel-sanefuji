@@ -13,10 +13,10 @@ Development on a Macbook Pro, react native framework and typescript language.
 * react-native: 0.63.4
 * Xcode: 11.6
 ## Steps to run and debug
-Start by installing some dependencies. Firstly, on ./Poke, run `npm install node` and `npm install watchman` so that Node and Watchman works properly when building the app.
+Start by installing some dependencies. Firstly, on ./Poke, run `npm install` so that Node and Watchman works properly when building the app.
 Afterwards, run `npx react-native start`.
 #### IOS
-For the IOS, it's necessary to install pods. Therefore, on ./Poke/ios run `install pods`. There should be a new folder named "pods".
+For the IOS, it's necessary to install pods. Therefore, on ./Poke/ios run `pod install`. There should be a new folder named "pods".
 Ensure that, if no IOS device is connected, there is an IOS simulator.
 Then, open another terminal, go to ./Poke and run `npx react-native run-ios`. The app should be running on the IOS shortly.
 #### Android
