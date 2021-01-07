@@ -3,7 +3,7 @@ import {SafeAreaView, StyleSheet, ScrollView, View, Text, StatusBar} from 'react
 
 import {Colors} from 'react-native/Libraries/NewAppScreen';
 
-import {EmailInput, SenhaInput} from './src/components/login-input';
+import {EmailInput, PasswordInput} from './src/components/login-input';
 import {SubmitButton} from './src/components/submit-button';
 
 const App = () => {
@@ -16,7 +16,7 @@ const App = () => {
             <Text style={styles.simple}>Bem vindo(a) à Taqtile!</Text>
             
             <EmailInput />
-            <SenhaInput />
+            <PasswordInput />
             <SubmitButton />
 
           </View>

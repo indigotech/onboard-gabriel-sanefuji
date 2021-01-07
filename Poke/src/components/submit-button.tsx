@@ -3,11 +3,10 @@ import {StyleSheet, View, Button} from 'react-native';
 
 export const SubmitButton = () => {
   return (
-    <>
-      <View style={styles.input}>
-        <Button title="Entrar" onPress={() => { }}/>
-      </View>
-    </>
+    <View style={styles.input}>
+      <Button title="Entrar" onPress={() => { 
+      }}/>
+    </View>
   );
 };
 

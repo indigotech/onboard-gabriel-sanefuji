@@ -1,25 +1,21 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {StyleSheet, View, Text, TextInput} from 'react-native';
 
 export const EmailInput = () => {
   return (
-    <>
-      <View style={styles.input}>
-        <Text>E-mail</Text>
-        <TextInput style={styles.box} />
-      </View>
-    </>
+    <View style={styles.input}>
+      <Text>E-mail</Text>
+      <TextInput style={styles.box}/>
+    </View>
   );
 };
 
-export const SenhaInput = () => {
+export const PasswordInput = () => {
   return (
-    <>
-      <View style={styles.input}>
-        <Text>Senha</Text>
-        <TextInput style={styles.box} />
-      </View>
-    </>
+    <View style={styles.input}>
+      <Text>Senha</Text>
+      <TextInput style={styles.box}/>
+    </View>
   );
 }
 
