@@ -1,19 +1,10 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * Generated with the TypeScript template
- * https://github.com/react-native-community/react-native-template-typescript
- *
- * @format
- */
-
 import React from 'react';
 import {SafeAreaView, StyleSheet, ScrollView, View, Text, StatusBar} from 'react-native';
 
 import {Colors} from 'react-native/Libraries/NewAppScreen';
 
-declare const global: {HermesInternal: null | unknown};
+import {EmailInput, SenhaInput} from './src/components/login-input';
+import {SubmitButton} from './src/components/submit-button';
 
 const App = () => {
   return (
@@ -21,13 +12,13 @@ const App = () => {
       <StatusBar barStyle="dark-content" />
       <SafeAreaView>
         <ScrollView contentInsetAdjustmentBehavior="automatic" style={styles.scrollView}>
-          {global.HermesInternal == null ? null : (
-            <View style={styles.engine}>
-              <Text style={styles.footer}>Engine: Hermes</Text>
-            </View>
-          )}
           <View style={styles.body}>
-            <Text style={styles.simple}>Hello World!</Text>
+            <Text style={styles.simple}>Bem vindo(a) à Taqtile!</Text>
+            
+            <EmailInput />
+            <SenhaInput />
+            <SubmitButton />
+
           </View>
         </ScrollView>
       </SafeAreaView>
@@ -37,7 +28,7 @@ const App = () => {
 
 const styles = StyleSheet.create({
   scrollView: {
-    backgroundColor: Colors.lighter,
+    backgroundColor: Colors.lighter
   },
   engine: {
     position: 'absolute',
@@ -45,12 +36,16 @@ const styles = StyleSheet.create({
   },
   body: {
     backgroundColor: Colors.white,
+    flex: 1,
+    width: '100%',
+    height: '100%',
   },
   simple: {
     fontSize: 24,
     fontWeight: '600',
     color: Colors.black,
     textAlign: 'center',
+    marginTop: 20
   },
   footer: {
     color: Colors.dark,
