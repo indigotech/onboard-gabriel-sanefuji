@@ -1,21 +1,33 @@
-import React, { useState } from 'react';
-import {StyleSheet, View, Text, TextInput} from 'react-native';
+import React from 'react';
+import {StyleSheet, View, Text, TextInput, ImagePropTypes} from 'react-native';
 
-export const EmailInput = () => {
+interface InputProps {
+  text: string;
+  onTextChange: (text: string) => void;
+}
+
+export const EmailInput: React.FC<InputProps> = (props) => {
   return (
-    <View style={styles.input}>
-      <Text>E-mail</Text>
-      <TextInput style={styles.box}/>
-    </View>
+      <View style={styles.input}>
+        <Text>E-mail</Text>
+        <TextInput 
+          style={styles.box}
+          value={props.text}
+          onChangeText = {props.onTextChange}/>
+      </View>
   );
 };
 
-export const PasswordInput = () => {
+export const PasswordInput: React.FC<InputProps> = (props) => {
   return (
-    <View style={styles.input}>
-      <Text>Senha</Text>
-      <TextInput style={styles.box}/>
-    </View>
+      <View style={styles.input}>
+        <Text>Senha</Text>
+        <TextInput 
+          style={styles.box} 
+          value={props.text}
+          onChangeText = {props.onTextChange}
+          secureTextEntry={true}/>
+      </View>
   );
 }
 
