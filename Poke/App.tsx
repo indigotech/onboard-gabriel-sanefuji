@@ -23,11 +23,7 @@ const App = () => {
             <Text style={styles.simple}>Bem vindo(a) à Taqtile!</Text>
             <EmailInput text={email} onTextChange={setEmail} />
             <PasswordInput text={password} onTextChange={setPassword} />
-            <SubmitButton
-              onTap={() => {
-                handleSubmit();
-              }}
-            />
+            <SubmitButton onTap={() => {handleSubmit();}} />
           </View>
         </ScrollView>
       </SafeAreaView>
