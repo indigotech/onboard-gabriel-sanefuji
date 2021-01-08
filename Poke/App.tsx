@@ -7,12 +7,37 @@ import {EmailInput, PasswordInput} from './src/components/login-input';
 import {SubmitButton} from './src/components/submit-button';
 import {validation} from './src/validation';
 
+import {ApolloClient, gql, InMemoryCache} from '@apollo/client';
+
+const client = new ApolloClient({
+  uri: 'https://tq-template-server-sample.herokuapp.com/graphql',
+  cache: new InMemoryCache()
+});
+
 const App = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  
   const handleSubmit = () => {
     const erro = validation(email, password);
     Alert.alert(erro);
+    if(erro === 'Tudo certo'){
+      client
+      .mutate({
+        mutation: gql`
+        mutation{
+          login(data:{
+            email: "${email}"
+            password: "${password}"
+          }){
+            token
+          }
+        }
+      `
+      })
+      .then(result => console.log(result));
+    }
+    
   };
   return (
     <>

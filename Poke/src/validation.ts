@@ -4,7 +4,7 @@ export function validation(email: string, password: string) {
     case email === '':
       error = 'O campo de e-mail deve estar preenchido';
       return error;
-    case !email.match(/.+(@{1}.+.com{1}$)/):
+    case !email.match(/.+(@{1}.+(.com{1}$|.com.br{1}$))/):
       error = 'O e-mail foi escrito errado';
       return error;
     case password === '':
