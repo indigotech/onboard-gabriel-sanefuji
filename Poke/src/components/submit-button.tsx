@@ -7,16 +7,9 @@ interface SubmitButtonProps {
 
 export const SubmitButton: React.FC<SubmitButtonProps> = (props) => {
   return (
-<<<<<<< HEAD
-    <View style={styles.input}>
-      <Button title="Entrar" onPress={() => { 
-      }}/>
-    </View>
-=======
       <View style={styles.input}>
         <Button title="Entrar" onPress={props.onTap}/>
       </View>
->>>>>>> Login validation
   );
 };
 
