@@ -1,5 +1,5 @@
 import React from 'react';
-import {StyleSheet, View, Text, TextInput} from 'react-native';
+import {StyleSheet, View, Text, TextInput, ImagePropTypes} from 'react-native';
 
 interface InputProps {
   text: string;
