@@ -1,12 +1,15 @@
 import React from 'react';
 import {StyleSheet, View, Button} from 'react-native';
 
-export const SubmitButton = () => {
+interface SubmitButtonProps {
+  onTap: () => void;
+}
+
+export const SubmitButton: React.FC<SubmitButtonProps> = (props) => {
   return (
-    <View style={styles.input}>
-      <Button title="Entrar" onPress={() => { 
-      }}/>
-    </View>
+      <View style={styles.input}>
+        <Button title="Entrar" onPress={props.onTap}/>
+      </View>
   );
 };
 

@@ -1,12 +1,19 @@
-import React from 'react';
-import {SafeAreaView, StyleSheet, ScrollView, View, Text, StatusBar} from 'react-native';
+import React, {useState} from 'react';
+import {SafeAreaView, StyleSheet, ScrollView, View, Text, StatusBar, Alert} from 'react-native';
 
 import {Colors} from 'react-native/Libraries/NewAppScreen';
 
 import {EmailInput, PasswordInput} from './src/components/login-input';
 import {SubmitButton} from './src/components/submit-button';
+import {validation} from './src/validation';
 
 const App = () => {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const handleSubmit = () => {
+    const erro = validation(email, password);
+    Alert.alert(erro);
+  };
   return (
     <>
       <StatusBar barStyle="dark-content" />
@@ -14,11 +21,9 @@ const App = () => {
         <ScrollView contentInsetAdjustmentBehavior="automatic" style={styles.scrollView}>
           <View style={styles.body}>
             <Text style={styles.simple}>Bem vindo(a) à Taqtile!</Text>
-            
-            <EmailInput />
-            <PasswordInput />
-            <SubmitButton />
-
+            <EmailInput text={email} onTextChange={setEmail} />
+            <PasswordInput text={password} onTextChange={setPassword} />
+            <SubmitButton onTap={() => {handleSubmit();}} />
           </View>
         </ScrollView>
       </SafeAreaView>
@@ -28,7 +33,7 @@ const App = () => {
 
 const styles = StyleSheet.create({
   scrollView: {
-    backgroundColor: Colors.lighter
+    backgroundColor: Colors.lighter,
   },
   engine: {
     position: 'absolute',
@@ -45,7 +50,7 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     color: Colors.black,
     textAlign: 'center',
-    marginTop: 20
+    marginTop: 20,
   },
   footer: {
     color: Colors.dark,
