@@ -4,7 +4,7 @@ import {SafeAreaView, StyleSheet, ScrollView, View, Text, StatusBar, Alert} from
 const Main = () => {
   return(
     <>
-      <Text>Olá</Text>
+      <Text></Text>
     </>
   )
 }
