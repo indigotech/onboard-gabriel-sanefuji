@@ -89,17 +89,13 @@ const App = (props: any) => {
         <ScrollView contentInsetAdjustmentBehavior="automatic" style={styles.scrollView}>
           <View style={styles.body}>
             {isLoading ? (
-              <ActivityIndicator size={'large'} />
+              <ActivityIndicator size={'large'} color="#000000"/>
             ) : (
               <>
                 <Text style={styles.simple}>Bem vindo(a) à Taqtile!</Text>
                 <EmailInput text={email} onTextChange={setEmail} />
                 <PasswordInput text={password} onTextChange={setPassword} />
-                <SubmitButton
-                  onTap={() => {
-                    handleSubmit(props);
-                  }}
-                />
+                <SubmitButton onTap={() => {handleSubmit(props)}} />
               </>
             )}
           </View>
