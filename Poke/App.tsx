@@ -8,6 +8,7 @@ import {SubmitButton} from './src/components/submit-button';
 import {validation} from './src/validation';
 import {ApolloClient, InMemoryCache, gql} from '@apollo/client';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { Navigation } from 'react-native-navigation';
 
 const client = new ApolloClient({
   uri: 'https://tq-template-server-sample.herokuapp.com/graphql',
@@ -47,19 +48,30 @@ const login = (email: string, password: string) => {
 const storeData = async (value: string) => {
   try {
     await AsyncStorage.setItem('@storage_Key', value)
-    Alert.alert("Nice")
   } catch (e) {
     Alert.alert(e)
   }
 }
 
-const App = () => {
+const App = (props: any) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const handleSubmit = () => {
+  const handleSubmit = (props: any) => {
     const validationError = validation(email, password);
-    if(validationError === null){
+    if(!validationError){
       login(email, password)
+      Navigation.push(props.componentId, {
+        component: {
+          name: 'Main', // Push the screen registered with the 'Settings' key
+          options: { // Optional options object to configure the screen
+            topBar: {
+              title: {
+                text: 'Main' // Set the TopBar title of the new Screen
+              }
+            }
+          }
+        }
+      });
     }
     else{
       Alert.alert(validationError);
@@ -74,7 +86,7 @@ const App = () => {
             <Text style={styles.simple}>Bem vindo(a) à Taqtile!</Text>
             <EmailInput text={email} onTextChange={setEmail} />
             <PasswordInput text={password} onTextChange={setPassword} />
-            <SubmitButton onTap={handleSubmit} />
+            <SubmitButton onTap={() => {handleSubmit(props)}} />
           </View>
         </ScrollView>
       </SafeAreaView>
