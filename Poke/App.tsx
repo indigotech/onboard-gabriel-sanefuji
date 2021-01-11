@@ -60,7 +60,7 @@ const App = (props: NavigationComponentProps) => {
   const [isLoading, setLoading] = useState(false);
   const handleSubmit = async () => {
     const validationError = validation(email, password);
-    if (validationError === null) {
+    if (!validationError) {
       setLoading(true);
       if (await login(email, password)) {
         Navigation.push(props.componentId, {
