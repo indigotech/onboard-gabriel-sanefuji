@@ -8,6 +8,7 @@ import {SubmitButton} from './src/components/submit-button';
 import {validation} from './src/validation';
 import {ApolloClient, InMemoryCache, gql} from '@apollo/client';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { Navigation } from 'react-native-navigation';
 
 const client = new ApolloClient({
   uri: 'https://tq-template-server-sample.herokuapp.com/graphql',
@@ -17,7 +18,7 @@ const client = new ApolloClient({
 // Email: admin@taqtile.com.br
 // Password: 1234qwer
 
-const login = (email: string, password: string) => {
+const login = (email: string, password: string, props: any) => {
    client.mutate({
     mutation: gql`
       mutation {
@@ -34,7 +35,7 @@ const login = (email: string, password: string) => {
     console.log(result)
     const jsonString = JSON.stringify(result);
     const data = JSON.parse(jsonString);
-    storeData(data.data.login.token);
+    storeData(data.data.login.token, props);
   })
   .catch(err => {
     const errorString = JSON.stringify(err)
@@ -44,22 +45,33 @@ const login = (email: string, password: string) => {
   })
 }
 
-const storeData = async (value: string) => {
+const storeData = async (value: string, props: any) => {
   try {
     await AsyncStorage.setItem('@storage_Key', value)
-    Alert.alert("Nice")
+    Navigation.push(props.componentId, {
+      component: {
+        name: 'Main', // Push the screen registered with the 'Settings' key
+        options: { // Optional options object to configure the screen
+          topBar: {
+            title: {
+              text: 'Main' // Set the TopBar title of the new Screen
+            }
+          }
+        }
+      }
+    });
   } catch (e) {
     Alert.alert(e)
   }
 }
 
-const App = () => {
+const App = (props: any) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const handleSubmit = () => {
+  const handleSubmit = (props: any) => {
     const validationError = validation(email, password);
     if(validationError === null){
-      login(email, password)
+      login(email, password, props)
     }
     else{
       Alert.alert(validationError);
@@ -74,7 +86,7 @@ const App = () => {
             <Text style={styles.simple}>Bem vindo(a) à Taqtile!</Text>
             <EmailInput text={email} onTextChange={setEmail} />
             <PasswordInput text={password} onTextChange={setPassword} />
-            <SubmitButton onTap={handleSubmit} />
+            <SubmitButton onTap={() => {handleSubmit(props)}} />
           </View>
         </ScrollView>
       </SafeAreaView>
