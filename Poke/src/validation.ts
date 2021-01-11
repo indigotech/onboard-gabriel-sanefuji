@@ -17,7 +17,7 @@ export function validation(email: string, password: string) {
       error = 'A senha deve ter no mínimo um caracter e um número';
       return error;
     default:
-      error = 'Tudo certo';
+      error = null;
       return error;
   }
 }

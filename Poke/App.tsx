@@ -58,7 +58,7 @@ const App = () => {
   const [password, setPassword] = useState('');
   const handleSubmit = () => {
     const validationError = validation(email, password);
-    if(validationError === 'Tudo certo'){
+    if(validationError === null){
       login(email, password)
     }
     else{
@@ -74,7 +74,7 @@ const App = () => {
             <Text style={styles.simple}>Bem vindo(a) à Taqtile!</Text>
             <EmailInput text={email} onTextChange={setEmail} />
             <PasswordInput text={password} onTextChange={setPassword} />
-            <SubmitButton onTap={() => {handleSubmit()}} />
+            <SubmitButton onTap={handleSubmit} />
           </View>
         </ScrollView>
       </SafeAreaView>
