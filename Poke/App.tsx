@@ -18,7 +18,7 @@ const client = new ApolloClient({
 // Email: admin@taqtile.com.br
 // Password: 1234qwer
 
-const login = (email: string, password: string, props: any) => {
+const login = (email: string, password: string) => {
    client.mutate({
     mutation: gql`
       mutation {
@@ -35,7 +35,7 @@ const login = (email: string, password: string, props: any) => {
     console.log(result)
     const jsonString = JSON.stringify(result);
     const data = JSON.parse(jsonString);
-    storeData(data.data.login.token, props);
+    storeData(data.data.login.token);
   })
   .catch(err => {
     const errorString = JSON.stringify(err)
@@ -45,21 +45,9 @@ const login = (email: string, password: string, props: any) => {
   })
 }
 
-const storeData = async (value: string, props: any) => {
+const storeData = async (value: string) => {
   try {
     await AsyncStorage.setItem('@storage_Key', value)
-    Navigation.push(props.componentId, {
-      component: {
-        name: 'Main', // Push the screen registered with the 'Settings' key
-        options: { // Optional options object to configure the screen
-          topBar: {
-            title: {
-              text: 'Main' // Set the TopBar title of the new Screen
-            }
-          }
-        }
-      }
-    });
   } catch (e) {
     Alert.alert(e)
   }
@@ -71,7 +59,19 @@ const App = (props: any) => {
   const handleSubmit = (props: any) => {
     const validationError = validation(email, password);
     if(validationError === null){
-      login(email, password, props)
+      login(email, password)
+      Navigation.push(props.componentId, {
+        component: {
+          name: 'Main', // Push the screen registered with the 'Settings' key
+          options: { // Optional options object to configure the screen
+            topBar: {
+              title: {
+                text: 'Main' // Set the TopBar title of the new Screen
+              }
+            }
+          }
+        }
+      });
     }
     else{
       Alert.alert(validationError);
