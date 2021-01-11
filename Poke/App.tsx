@@ -58,7 +58,7 @@ const App = (props: any) => {
   const [password, setPassword] = useState('');
   const handleSubmit = (props: any) => {
     const validationError = validation(email, password);
-    if(validationError === null){
+    if(!validationError){
       login(email, password)
       Navigation.push(props.componentId, {
         component: {
