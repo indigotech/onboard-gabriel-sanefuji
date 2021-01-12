@@ -1,12 +1,12 @@
-import React, {useState} from 'react';
-import {SafeAreaView, StyleSheet, ScrollView, View, Text, StatusBar, Alert} from 'react-native';
+import React from 'react';
+import {Text} from 'react-native';
 
 const Main = () => {
-  return(
+  return (
     <>
       <Text></Text>
     </>
-  )
-}
+  );
+};
 
 export default Main;

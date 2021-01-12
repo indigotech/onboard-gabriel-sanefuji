@@ -8,7 +8,7 @@ import {SubmitButton} from './src/components/submit-button';
 import {validation} from './src/validation';
 import {ApolloClient, InMemoryCache, gql} from '@apollo/client';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {Navigation} from 'react-native-navigation';
+import {Navigation, NavigationComponentProps} from 'react-native-navigation';
 
 const client = new ApolloClient({
   uri: 'https://tq-template-server-sample.herokuapp.com/graphql',
@@ -54,11 +54,11 @@ const storeData = async (value: string) => {
   }
 };
 
-const App = (props: any) => {
+const App = (props: NavigationComponentProps) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isLoading, setLoading] = useState(false);
-  const handleSubmit = (props: any) => {
+  const handleSubmit = () => {
     const validationError = validation(email, password);
     if (validationError === null) {
       setLoading(true);
@@ -89,13 +89,13 @@ const App = (props: any) => {
         <ScrollView contentInsetAdjustmentBehavior="automatic" style={styles.scrollView}>
           <View style={styles.body}>
             {isLoading ? (
-              <ActivityIndicator size={'large'} color="#000000"/>
+              <ActivityIndicator size="large" color="#000000" />
             ) : (
               <>
                 <Text style={styles.simple}>Bem vindo(a) à Taqtile!</Text>
                 <EmailInput text={email} onTextChange={setEmail} />
                 <PasswordInput text={password} onTextChange={setPassword} />
-                <SubmitButton onTap={() => {handleSubmit(props)}} />
+                <SubmitButton onTap={handleSubmit} />
               </>
             )}
           </View>
