@@ -1,7 +1,7 @@
 import React from 'react';
 import {SafeAreaView, StyleSheet, View, Text, FlatList} from 'react-native';
 
-type ItemType = {
+interface ItemType {
   item: {
     name: string;
     email: string;
