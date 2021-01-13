@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {SafeAreaView, StyleSheet, ScrollView, View, Text, StatusBar, Alert} from 'react-native';
+import {SafeAreaView, StyleSheet, ScrollView, View, Text, StatusBar, Alert, ActivityIndicator} from 'react-native';
 
 import {Colors} from 'react-native/Libraries/NewAppScreen';
 
@@ -8,19 +8,20 @@ import {SubmitButton} from './src/components/submit-button';
 import {validation} from './src/validation';
 import {ApolloClient, InMemoryCache, gql} from '@apollo/client';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { Navigation } from 'react-native-navigation';
+import {Navigation, NavigationComponentProps} from 'react-native-navigation';
 
 const client = new ApolloClient({
   uri: 'https://tq-template-server-sample.herokuapp.com/graphql',
-  cache: new InMemoryCache()
+  cache: new InMemoryCache(),
 });
 
 // Email: admin@taqtile.com.br
 // Password: 1234qwer
 
 const login = (email: string, password: string) => {
-   client.mutate({
-    mutation: gql`
+  return client
+    .mutate({
+      mutation: gql`
       mutation {
         login (data:{
           email: "${email}"
@@ -29,51 +30,56 @@ const login = (email: string, password: string) => {
           token
         }
       }
-    `
-  })
-  .then((result) => {
-    console.log(result)
-    const jsonString = JSON.stringify(result);
-    const data = JSON.parse(jsonString);
-    storeData(data.data.login.token);
-  })
-  .catch(err => {
-    const errorString = JSON.stringify(err)
-    const error = JSON.parse(errorString)
-    console.log(error)
-    Alert.alert(error.message)
-  })
-}
+    `,
+    })
+    .then((result) => {
+      const jsonString = JSON.stringify(result);
+      const data = JSON.parse(jsonString);
+      storeData(data.data.login.token);
+      return result;
+    })
+    .catch((err) => {
+      const errorString = JSON.stringify(err);
+      const error = JSON.parse(errorString);
+      Alert.alert(error.message);
+      return null;
+    });
+};
 
 const storeData = async (value: string) => {
   try {
-    await AsyncStorage.setItem('@storage_Key', value)
+    await AsyncStorage.setItem('@storage_Key', value);
   } catch (e) {
-    Alert.alert(e)
+    Alert.alert(e);
   }
-}
+};
 
-const App = (props: any) => {
+const App = (props: NavigationComponentProps) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const handleSubmit = (props: any) => {
+  const [isLoading, setLoading] = useState(false);
+  const handleSubmit = async () => {
     const validationError = validation(email, password);
-    if(!validationError){
-      login(email, password)
-      Navigation.push(props.componentId, {
-        component: {
-          name: 'Main', // Push the screen registered with the 'Settings' key
-          options: { // Optional options object to configure the screen
-            topBar: {
-              title: {
-                text: 'Main' // Set the TopBar title of the new Screen
-              }
-            }
-          }
-        }
-      });
-    }
-    else{
+    if (validationError === null) {
+      setLoading(true);
+      if (await login(email, password)) {
+        Navigation.push(props.componentId, {
+          component: {
+            name: 'Main', // Push the screen registered with the 'Settings' key
+            options: {
+              // Optional options object to configure the screen
+              topBar: {
+                title: {
+                  text: 'Main', // Set the TopBar title of the new Screen
+                },
+              },
+            },
+          },
+        }).then(() => {
+          setLoading(false);
+        });
+      }
+    } else {
       Alert.alert(validationError);
     }
   };
@@ -83,10 +89,16 @@ const App = (props: any) => {
       <SafeAreaView>
         <ScrollView contentInsetAdjustmentBehavior="automatic" style={styles.scrollView}>
           <View style={styles.body}>
-            <Text style={styles.simple}>Bem vindo(a) à Taqtile!</Text>
-            <EmailInput text={email} onTextChange={setEmail} />
-            <PasswordInput text={password} onTextChange={setPassword} />
-            <SubmitButton onTap={() => {handleSubmit(props)}} />
+            {isLoading ? (
+              <ActivityIndicator size="large" color="#000000" />
+            ) : (
+              <>
+                <Text style={styles.simple}>Bem vindo(a) à Taqtile!</Text>
+                <EmailInput text={email} onTextChange={setEmail} />
+                <PasswordInput text={password} onTextChange={setPassword} />
+                <SubmitButton onTap={handleSubmit} />
+              </>
+            )}
           </View>
         </ScrollView>
       </SafeAreaView>

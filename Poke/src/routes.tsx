@@ -1,8 +1,6 @@
-import { Component } from "react";
-import { Navigation } from "react-native-navigation";
+import {Navigation} from 'react-native-navigation';
 import App from '../App';
-import Main from './pages/main'
+import Main from './pages/main';
 
 Navigation.registerComponent('Login', () => App);
 Navigation.registerComponent('Main', () => Main);
-
