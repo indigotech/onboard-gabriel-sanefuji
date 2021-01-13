@@ -1,6 +1,14 @@
 import React from 'react';
 import {SafeAreaView, StyleSheet, View, Text, FlatList} from 'react-native';
 
+type ItemType = {
+  item: {
+    name: string;
+    email: string;
+    id: string;
+  };
+};
+
 const list = [
   {
     name: 'Luiz Higuti',
@@ -65,7 +73,7 @@ const list = [
 ];
 
 const Users = () => {
-  const renderItem = ({item}: any) => {
+  const renderItem = ({item}: ItemType) => {
     return (
       <View style={styles.box}>
         <Text style={styles.name} key={item.id}>
