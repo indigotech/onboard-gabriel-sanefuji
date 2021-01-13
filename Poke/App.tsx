@@ -19,7 +19,7 @@ const client = new ApolloClient({
 // Password: 1234qwer
 
 const login = (email: string, password: string) => {
-  client
+  return client
     .mutate({
       mutation: gql`
       mutation {
@@ -33,16 +33,16 @@ const login = (email: string, password: string) => {
     `,
     })
     .then((result) => {
-      console.log(result);
       const jsonString = JSON.stringify(result);
       const data = JSON.parse(jsonString);
       storeData(data.data.login.token);
+      return result;
     })
     .catch((err) => {
       const errorString = JSON.stringify(err);
       const error = JSON.parse(errorString);
-      console.log(error);
       Alert.alert(error.message);
+      return null;
     });
 };
 
@@ -58,26 +58,27 @@ const App = (props: NavigationComponentProps) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isLoading, setLoading] = useState(false);
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     const validationError = validation(email, password);
     if (validationError === null) {
       setLoading(true);
-      login(email, password);
-      Navigation.push(props.componentId, {
-        component: {
-          name: 'Main', // Push the screen registered with the 'Settings' key
-          options: {
-            // Optional options object to configure the screen
-            topBar: {
-              title: {
-                text: 'Main',
-                // Set the TopBar title of the new Screen
+      if (await login(email, password)) {
+        Navigation.push(props.componentId, {
+          component: {
+            name: 'Main', // Push the screen registered with the 'Settings' key
+            options: {
+              // Optional options object to configure the screen
+              topBar: {
+                title: {
+                  text: 'Main', // Set the TopBar title of the new Screen
+                },
               },
             },
           },
-        },
-      });
-      setLoading(false);
+        }).then(() => {
+          setLoading(false);
+        });
+      }
     } else {
       Alert.alert(validationError);
     }

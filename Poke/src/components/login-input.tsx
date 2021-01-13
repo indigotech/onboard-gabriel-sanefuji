@@ -10,10 +10,7 @@ export const EmailInput: React.FC<InputProps> = (props) => {
   return (
     <View style={styles.input}>
       <Text>E-mail</Text>
-      <TextInput
-        style={styles.box}
-        value={props.text}
-        onChangeText = {props.onTextChange} />
+      <TextInput style={styles.box} value={props.text} onChangeText={props.onTextChange} />
     </View>
   );
 };
@@ -22,11 +19,7 @@ export const PasswordInput: React.FC<InputProps> = (props) => {
   return (
     <View style={styles.input}>
       <Text>Senha</Text>
-      <TextInput 
-        style={styles.box} 
-        value={props.text}
-        onChangeText = {props.onTextChange}
-        secureTextEntry={true} />
+      <TextInput style={styles.box} value={props.text} onChangeText={props.onTextChange} secureTextEntry={true} />
     </View>
   );
 };
