@@ -69,13 +69,9 @@ const Users = () => {
   }
 
   useEffect(() => {
-    fetchList()
-      .then(() => {
-        setLoading(false);
-      })
-      .catch(() => {
-        setLoading(false);
-      });
+    fetchList().finally(() => {
+      setLoading(false);
+    });
   }, []);
 
   const renderItem = ({item}: ItemType) => {
