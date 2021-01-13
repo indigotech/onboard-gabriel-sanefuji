@@ -1,78 +1,84 @@
-import React from 'react';
-import {SafeAreaView, StyleSheet, View, Text, FlatList} from 'react-native';
+import React, {useEffect, useState} from 'react';
+import {SafeAreaView, StyleSheet, View, Text, FlatList, Alert, ActivityIndicator} from 'react-native';
+import {ApolloClient, createHttpLink, gql, InMemoryCache} from '@apollo/client';
+import {setContext} from '@apollo/client/link/context';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
+interface Users {
+  name: string;
+  email: string;
+  id: string;
+}
 
 interface ItemType {
-  item: {
-    name: string;
-    email: string;
-    id: string;
+  item: Users;
+}
+
+const httpLink = createHttpLink({
+  uri: 'https://tq-template-server-sample.herokuapp.com/graphql',
+});
+
+const authLink = setContext(async (_, {headers}) => {
+  const token = await AsyncStorage.getItem(`@storage_Key`);
+  return {
+    headers: {
+      ...headers,
+      authorization: token ? `${token}` : 'Cristiane',
+    },
   };
+});
+
+const client = new ApolloClient({
+  link: authLink.concat(httpLink),
+  cache: new InMemoryCache(),
+});
+
+const queryList = () => {
+  return client
+    .query({
+      query: gql`
+        query {
+          users(pageInfo: {offset: 0, limit: 20}) {
+            nodes {
+              id
+              name
+              email
+            }
+          }
+        }
+      `,
+    })
+    .then((result) => {
+      return result.data.users.nodes;
+    })
+    .catch((err) => {
+      Alert.alert(err.message);
+      return err;
+    });
 };
 
-const list = [
-  {
-    name: 'Luiz Higuti',
-    email: 'luiz.higuti@taqtile.com.br',
-    id: '1',
-  },
-  {
-    name: 'Gabriel Sanefuji',
-    email: 'gabriel.sanefuji@taqtile.com.br',
-    id: '2',
-  },
-  {
-    name: 'Luiz Higuti',
-    email: 'luiz.higuti@taqtile.com.br',
-    id: '3',
-  },
-  {
-    name: 'Gabriel Sanefuji',
-    email: 'gabriel.sanefuji@taqtile.com.br',
-    id: '4',
-  },
-  {
-    name: 'Luiz Higuti',
-    email: 'luiz.higuti@taqtile.com.br',
-    id: '5',
-  },
-  {
-    name: 'Gabriel Sanefuji',
-    email: 'gabriel.sanefuji@taqtile.com.br',
-    id: '6',
-  },
-  {
-    name: 'Luiz Higuti',
-    email: 'luiz.higuti@taqtile.com.br',
-    id: '7',
-  },
-  {
-    name: 'Gabriel Sanefuji',
-    email: 'gabriel.sanefuji@taqtile.com.br',
-    id: '8',
-  },
-  {
-    name: 'Luiz Higuti',
-    email: 'luiz.higuti@taqtile.com.br',
-    id: '9',
-  },
-  {
-    name: 'Gabriel Sanefuji',
-    email: 'gabriel.sanefuji@taqtile.com.br',
-    id: '10',
-  },
-  {
-    name: 'Luiz Higuti',
-    email: 'luiz.higuti@taqtile.com.br',
-    id: '11',
-  },
-  {
-    name: 'Gabriel Sanefuji',
-    email: 'gabriel.sanefuji@taqtile.com.br',
-    id: '12',
-  },
-];
-
 const Users = () => {
+  const [userList, setUserList] = useState([]);
+  const [isLoading, setLoading] = useState(true);
+  async function makeList() {
+    const users = await queryList();
+    const list = users.map((item: Users) => {
+      return {
+        name: item.name,
+        email: item.email,
+        id: item.id,
+      };
+    });
+    console.log(list);
+    setUserList(list);
+  }
+
+  useEffect(() => {
+    makeList().then(() => {
+      setLoading(false);
+    });
+  }, []);
+
   const renderItem = ({item}: ItemType) => {
     return (
       <View style={styles.box}>
@@ -86,7 +92,11 @@ const Users = () => {
 
   return (
     <SafeAreaView style={styles.safeAreaView}>
-      <FlatList data={list} renderItem={renderItem} contentContainerStyle={{flexGrow: 1}} />
+      {isLoading ? (
+        <ActivityIndicator size="large" color="#000000" />
+      ) : (
+        <FlatList data={userList} renderItem={renderItem} contentContainerStyle={{flexGrow: 1}} />
+      )}
     </SafeAreaView>
   );
 };
