@@ -1,6 +1,6 @@
 import {Navigation} from 'react-native-navigation';
 import App from '../App';
-import Main from './pages/main';
+import Users from './pages/users';
 
 Navigation.registerComponent('Login', () => App);
-Navigation.registerComponent('Main', () => Main);
+Navigation.registerComponent('Users', () => Users);

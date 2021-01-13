@@ -60,17 +60,17 @@ const App = (props: NavigationComponentProps) => {
   const [isLoading, setLoading] = useState(false);
   const handleSubmit = async () => {
     const validationError = validation(email, password);
-    if (validationError === null) {
+    if (!validationError) {
       setLoading(true);
       if (await login(email, password)) {
         Navigation.push(props.componentId, {
           component: {
-            name: 'Main', // Push the screen registered with the 'Settings' key
+            name: 'Users', // Push the screen registered with the 'Settings' key
             options: {
               // Optional options object to configure the screen
               topBar: {
                 title: {
-                  text: 'Main', // Set the TopBar title of the new Screen
+                  text: 'Users', // Set the TopBar title of the new Screen
                 },
               },
             },
