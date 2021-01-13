@@ -44,11 +44,14 @@ const queryList = async (offset: number, limit: number) => {
               name
               email
             }
+            pageInfo {
+              hasNextPage
+            }
           }
         }
       `,
     });
-    return result.data.users.nodes;
+    return result.data.users;
   } catch (err) {
     Alert.alert(err.message);
     return err;
@@ -64,11 +67,12 @@ const Users = () => {
 
   async function fetchList() {
     const users = await queryList(offset, limit);
-    const list = users.map((item: User) => {
+    const list = users.nodes.map((item: User) => {
       return item;
     });
     const newList = userList.concat(list);
     setUserList(newList);
+    setOver(!users.pageInfo.hasNextPage);
   }
 
   async function updateOffset(newOffset: number) {
