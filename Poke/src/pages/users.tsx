@@ -4,14 +4,14 @@ import {ApolloClient, createHttpLink, gql, InMemoryCache} from '@apollo/client';
 import {setContext} from '@apollo/client/link/context';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-interface Users {
+interface User {
   name: string;
   email: string;
   id: string;
 }
 
 interface ItemType {
-  item: Users;
+  item: User;
 }
 
 const httpLink = createHttpLink({
@@ -33,12 +33,12 @@ const client = new ApolloClient({
   cache: new InMemoryCache(),
 });
 
-const queryList = () => {
-  return client
-    .query({
+const queryList = async (offset: string, limit: string) => {
+  try {
+    const result = await client.query({
       query: gql`
         query {
-          users(pageInfo: {offset: 0, limit: 20}) {
+          users(pageInfo: {offset: ${offset}, limit: ${limit}}) {
             nodes {
               id
               name
@@ -47,36 +47,35 @@ const queryList = () => {
           }
         }
       `,
-    })
-    .then((result) => {
-      return result.data.users.nodes;
-    })
-    .catch((err) => {
-      Alert.alert(err.message);
-      return err;
     });
+    return result.data.users.nodes;
+  } catch (err) {
+    Alert.alert(err.message);
+    return err;
+  }
 };
 
 const Users = () => {
   const [userList, setUserList] = useState([]);
   const [isLoading, setLoading] = useState(true);
-  async function makeList() {
-    const users = await queryList();
-    const list = users.map((item: Users) => {
-      return {
-        name: item.name,
-        email: item.email,
-        id: item.id,
-      };
+  const [offset, setOffset] = useState('0');
+  const [limit, setLimit] = useState('20');
+  async function fetchList() {
+    const users = await queryList(offset, limit);
+    const list = users.map((item: User) => {
+      return item;
     });
-    console.log(list);
     setUserList(list);
   }
 
   useEffect(() => {
-    makeList().then(() => {
-      setLoading(false);
-    });
+    fetchList()
+      .then(() => {
+        setLoading(false);
+      })
+      .catch(() => {
+        setLoading(false);
+      });
   }, []);
 
   const renderItem = ({item}: ItemType) => {
