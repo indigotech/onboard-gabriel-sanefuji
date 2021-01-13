@@ -33,7 +33,7 @@ const client = new ApolloClient({
   cache: new InMemoryCache(),
 });
 
-const queryList = async (offset: string, limit: string) => {
+const queryList = async (offset: number, limit: number) => {
   try {
     const result = await client.query({
       query: gql`
@@ -57,22 +57,43 @@ const queryList = async (offset: string, limit: string) => {
 
 const Users = () => {
   const [userList, setUserList] = useState([]);
-  const [isLoading, setLoading] = useState(true);
-  const [offset, setOffset] = useState('0');
-  const [limit, setLimit] = useState('20');
+  const [isLoading, setLoading] = useState(false);
+  const [offset, setOffset] = useState(0);
+  const [over, setOver] = useState(false);
+  const limit = 20;
+
   async function fetchList() {
     const users = await queryList(offset, limit);
     const list = users.map((item: User) => {
       return item;
     });
-    setUserList(list);
+    const newList = userList.concat(list);
+    setUserList(newList);
+  }
+
+  async function updateOffset(newOffset: number) {
+    setOffset(newOffset);
+    if (offset + limit > 142) {
+      setOver(true);
+    }
   }
 
   useEffect(() => {
-    fetchList().finally(() => {
-      setLoading(false);
-    });
-  }, []);
+    if (!isLoading) {
+      setLoading(true);
+      fetchList().finally(() => {
+        setLoading(false);
+      });
+    }
+  }, [offset]);
+
+  const handleLoadMore = async () => {
+    if (!isLoading && !over) {
+      const newOffset = offset + limit;
+      await updateOffset(newOffset);
+      setLoading(true);
+    }
+  };
 
   const renderItem = ({item}: ItemType) => {
     return (
@@ -85,13 +106,27 @@ const Users = () => {
     );
   };
 
+  const listFooter = () => {
+    if (!isLoading) {
+      return null;
+    }
+    return (
+      <View>
+        <ActivityIndicator size="large" color="#000000" />
+      </View>
+    );
+  };
+
   return (
     <SafeAreaView style={styles.safeAreaView}>
-      {isLoading ? (
-        <ActivityIndicator size="large" color="#000000" />
-      ) : (
-        <FlatList data={userList} renderItem={renderItem} contentContainerStyle={{flexGrow: 1}} />
-      )}
+      <FlatList
+        data={userList}
+        renderItem={renderItem}
+        contentContainerStyle={{flexGrow: 1}}
+        onEndReached={handleLoadMore}
+        onEndReachedThreshold={0.2}
+        ListFooterComponent={listFooter}
+      />
     </SafeAreaView>
   );
 };
