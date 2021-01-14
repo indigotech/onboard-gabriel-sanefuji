@@ -3,7 +3,7 @@ import {SafeAreaView, StyleSheet, ScrollView, View, Text, StatusBar, Alert, Acti
 
 import {Colors} from 'react-native/Libraries/NewAppScreen';
 
-import {EmailInput, PasswordInput} from './src/components/login-input';
+import {Input, PasswordInput} from './src/components/inputs';
 import {SubmitButton} from './src/components/submit-button';
 import {validation} from './src/validation';
 import {ApolloClient, InMemoryCache, gql} from '@apollo/client';
@@ -94,9 +94,9 @@ const App = (props: NavigationComponentProps) => {
             ) : (
               <>
                 <Text style={styles.simple}>Bem vindo(a) à Taqtile!</Text>
-                <EmailInput text={email} onTextChange={setEmail} />
-                <PasswordInput text={password} onTextChange={setPassword} />
-                <SubmitButton onTap={handleSubmit} />
+                <Input name={'E-mail'} text={email} onTextChange={setEmail} />
+                <PasswordInput name={''} text={password} onTextChange={setPassword} />
+                <SubmitButton text={'Entrar'} onTap={handleSubmit} />
               </>
             )}
           </View>
