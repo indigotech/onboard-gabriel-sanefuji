@@ -134,15 +134,7 @@ const Users = (props: NavigationComponentProps) => {
         onPress={() => {
           Navigation.push(props.componentId, {
             component: {
-              name: 'Add User', // Push the screen registered with the 'Settings' key
-              options: {
-                // Optional options object to configure the screen
-                topBar: {
-                  title: {
-                    text: 'Add User', // Set the TopBar title of the new Screen
-                  },
-                },
-              },
+              name: 'Add User',
             },
           });
         }}>
@@ -150,6 +142,14 @@ const Users = (props: NavigationComponentProps) => {
       </TouchableOpacity>
     </SafeAreaView>
   );
+};
+
+Users.options = {
+  topBar: {
+    title: {
+      text: 'Users',
+    },
+  },
 };
 
 const styles = StyleSheet.create({

@@ -12,6 +12,7 @@ const AddUser = () => {
   const [name, setName] = useState('');
   const [birthDate, setDate] = useState('');
   const [phone, setPhone] = useState('');
+
   const handleSubmit = async () => {
     const validationError = addUserValidation(email, name, phone, birthDate);
     if (!validationError) {
@@ -20,6 +21,7 @@ const AddUser = () => {
       Alert.alert(validationError);
     }
   };
+
   return (
     <>
       <StatusBar barStyle="dark-content" />
@@ -28,10 +30,10 @@ const AddUser = () => {
           <View style={styles.body}>
             <>
               <Text style={styles.simple}>Cadastre um usuário!</Text>
-              <Input name={'Nome'} text={name} onTextChange={setName} />
-              <Input name={'E-mail'} text={email} onTextChange={setEmail} />
-              <Input name={'Celular'} text={phone} onTextChange={setPhone} />
-              <Input name={'Data de nascimento'} text={birthDate} onTextChange={setDate} />
+              <Input name="Nome" text={name} onTextChange={setName} isPassword={false} />
+              <Input name="E-mail" text={email} onTextChange={setEmail} isPassword={false} />
+              <Input name="Celular" text={phone} onTextChange={setPhone} isPassword={false} />
+              <Input name="Data de nascimento" text={birthDate} onTextChange={setDate} isPassword={false} />
               <SubmitButton text={'Cadastre'} onTap={handleSubmit} />
             </>
           </View>
@@ -39,6 +41,14 @@ const AddUser = () => {
       </SafeAreaView>
     </>
   );
+};
+
+AddUser.options = {
+  topBar: {
+    title: {
+      text: 'Add User',
+    },
+  },
 };
 
 const styles = StyleSheet.create({

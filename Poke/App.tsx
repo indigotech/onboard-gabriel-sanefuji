@@ -3,7 +3,7 @@ import {SafeAreaView, StyleSheet, ScrollView, View, Text, StatusBar, Alert, Acti
 
 import {Colors} from 'react-native/Libraries/NewAppScreen';
 
-import {Input, PasswordInput} from './src/components/inputs';
+import {Input} from './src/components/inputs';
 import {SubmitButton} from './src/components/submit-button';
 import {validation} from './src/validation';
 import {ApolloClient, InMemoryCache, gql} from '@apollo/client';
@@ -58,6 +58,7 @@ const App = (props: NavigationComponentProps) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isLoading, setLoading] = useState(false);
+
   const handleSubmit = async () => {
     const validationError = validation(email, password);
     if (!validationError) {
@@ -65,15 +66,7 @@ const App = (props: NavigationComponentProps) => {
       if (await login(email, password)) {
         Navigation.push(props.componentId, {
           component: {
-            name: 'Users', // Push the screen registered with the 'Settings' key
-            options: {
-              // Optional options object to configure the screen
-              topBar: {
-                title: {
-                  text: 'Users', // Set the TopBar title of the new Screen
-                },
-              },
-            },
+            name: 'Users',
           },
         }).then(() => {
           setLoading(false);
@@ -83,6 +76,7 @@ const App = (props: NavigationComponentProps) => {
       Alert.alert(validationError);
     }
   };
+
   return (
     <>
       <StatusBar barStyle="dark-content" />
@@ -94,8 +88,8 @@ const App = (props: NavigationComponentProps) => {
             ) : (
               <>
                 <Text style={styles.simple}>Bem vindo(a) à Taqtile!</Text>
-                <Input name={'E-mail'} text={email} onTextChange={setEmail} />
-                <PasswordInput name={''} text={password} onTextChange={setPassword} />
+                <Input name="E-mail" text={email} onTextChange={setEmail} isPassword={false} />
+                <Input name="Senha" text={password} onTextChange={setPassword} isPassword={true} />
                 <SubmitButton text={'Entrar'} onTap={handleSubmit} />
               </>
             )}
