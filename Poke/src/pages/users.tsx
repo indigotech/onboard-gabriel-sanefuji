@@ -1,9 +1,8 @@
+import {gql} from '@apollo/client';
 import React, {useEffect, useState} from 'react';
-import {SafeAreaView, StyleSheet, View, Text, FlatList, Alert, ActivityIndicator, TouchableOpacity} from 'react-native';
-import {ApolloClient, createHttpLink, gql, InMemoryCache} from '@apollo/client';
-import {setContext} from '@apollo/client/link/context';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import {ActivityIndicator, Alert, FlatList, SafeAreaView, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {Navigation, NavigationComponentProps} from 'react-native-navigation';
+import {client} from '../apollo-client';
 
 interface User {
   name: string;
@@ -14,25 +13,6 @@ interface User {
 interface ItemType {
   item: User;
 }
-
-const httpLink = createHttpLink({
-  uri: 'https://tq-template-server-sample.herokuapp.com/graphql',
-});
-
-const authLink = setContext(async (_, {headers}) => {
-  const token = await AsyncStorage.getItem(`@storage_Key`);
-  return {
-    headers: {
-      ...headers,
-      authorization: token ? `${token}` : 'Cristiane',
-    },
-  };
-});
-
-const client = new ApolloClient({
-  link: authLink.concat(httpLink),
-  cache: new InMemoryCache(),
-});
 
 const queryList = async (offset: number, limit: number): Promise<JSON> => {
   try {

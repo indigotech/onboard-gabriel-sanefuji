@@ -1,3 +1,4 @@
+import {ApolloProvider, gql, useMutation} from '@apollo/client';
 import React, {useState} from 'react';
 import {Alert, SafeAreaView, ScrollView, StatusBar, StyleSheet, Text, View} from 'react-native';
 import {Colors} from 'react-native/Libraries/NewAppScreen';
@@ -46,7 +47,7 @@ export const AddUser = () => {
   };
 
   return (
-    <>
+    <ApolloProvider client={client}>
       <StatusBar barStyle="dark-content" />
       <SafeAreaView>
         <ScrollView contentInsetAdjustmentBehavior="automatic" style={styles.scrollView}>
@@ -60,7 +61,7 @@ export const AddUser = () => {
           </View>
         </ScrollView>
       </SafeAreaView>
-    </>
+    </ApolloProvider>
   );
 };
 
