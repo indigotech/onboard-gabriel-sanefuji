@@ -125,18 +125,14 @@ const Users = (props: NavigationComponentProps) => {
 
   return (
     <SafeAreaView style={styles.safeAreaView}>
-      {isLoading ? (
-        <ActivityIndicator size="large" color="#000000" />
-      ) : (
-        <FlatList
-          data={userList}
-          renderItem={renderItem}
-          contentContainerStyle={{flexGrow: 1}}
-          onEndReached={handleLoadMore}
-          onEndReachedThreshold={0.2}
-          ListFooterComponent={listFooter}
-        />
-      )}
+      <FlatList
+        data={userList}
+        renderItem={renderItem}
+        contentContainerStyle={{flexGrow: 1}}
+        onEndReached={handleLoadMore}
+        onEndReachedThreshold={0.2}
+        ListFooterComponent={listFooter}
+      />
       <TouchableOpacity style={styles.button} onPress={handlePress}>
         <Text style={styles.text}>+</Text>
       </TouchableOpacity>
