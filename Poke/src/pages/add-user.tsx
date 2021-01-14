@@ -1,6 +1,6 @@
 import {gql, useMutation} from '@apollo/client';
 import React, {useState} from 'react';
-import {Alert, SafeAreaView, ScrollView, StatusBar, StyleSheet, Text, View} from 'react-native';
+import {ActivityIndicator, Alert, SafeAreaView, ScrollView, StatusBar, StyleSheet, Text, View} from 'react-native';
 import {Navigation, NavigationComponentProps, NavigationFunctionComponent} from 'react-native-navigation';
 import {Props} from 'react-native-navigation/lib/dist/adapters/TouchablePreview';
 import {Colors} from 'react-native/Libraries/NewAppScreen';
@@ -59,7 +59,7 @@ export const AddUser: NavigationFunctionComponent<Props> = (props: NavigationCom
     } else if (dateValidator(birthDate)) {
       Alert.alert(dateError);
     } else {
-      Alert.alert('Nice');
+      createUser({variables: {name: name, email: email, phone: phone, birthDate: birthDate}});
       Navigation.pop(props.componentId);
     }
   };
@@ -70,12 +70,18 @@ export const AddUser: NavigationFunctionComponent<Props> = (props: NavigationCom
       <SafeAreaView>
         <ScrollView contentInsetAdjustmentBehavior="automatic" style={styles.scrollView}>
           <View style={styles.body}>
-            <Text style={styles.simple}>Cadastre um usuário!</Text>
-            <Input name="Nome" text={name} onTextChange={setName} isPassword={false} />
-            <Input name="E-mail" text={email} onTextChange={setEmail} isPassword={false} />
-            <Input name="Celular" text={phone} onTextChange={setPhone} isPassword={false} />
-            <Input name="Data de nascimento" text={birthDate} onTextChange={setDate} isPassword={false} />
-            <SubmitButton text={'Cadastre'} onTap={handleSubmit} />
+            {isLoading ? (
+              <ActivityIndicator size="large" color="#000000" />
+            ) : (
+              <>
+                <Text style={styles.simple}>Cadastre um usuário!</Text>
+                <Input name="Nome" text={name} onTextChange={setName} isPassword={false} />
+                <Input name="E-mail" text={email} onTextChange={setEmail} isPassword={false} />
+                <Input name="Celular" text={phone} onTextChange={setPhone} isPassword={false} />
+                <Input name="Data de nascimento" text={birthDate} onTextChange={setDate} isPassword={false} />
+                <SubmitButton text={'Cadastre'} onTap={handleSubmit} />
+              </>
+            )}
           </View>
         </ScrollView>
       </SafeAreaView>
