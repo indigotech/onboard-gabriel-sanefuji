@@ -70,7 +70,7 @@ export const AddUser: NavigationFunctionComponent<Props> = (props: NavigationCom
       <SafeAreaView>
         <ScrollView contentInsetAdjustmentBehavior="automatic" style={styles.scrollView}>
           <View style={styles.body}>
-            {isLoading ? (
+            {loading ? (
               <ActivityIndicator size="large" color="#000000" />
             ) : (
               <>
