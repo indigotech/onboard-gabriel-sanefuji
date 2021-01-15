@@ -33,7 +33,7 @@ const client = new ApolloClient({
   cache: new InMemoryCache(),
 });
 
-const queryList = async (offset: string, limit: string) => {
+const queryList = async (offset: number, limit: number): Promise<JSON> => {
   try {
     const result = await client.query({
       query: gql`
@@ -44,11 +44,14 @@ const queryList = async (offset: string, limit: string) => {
               name
               email
             }
+            pageInfo {
+              hasNextPage
+            }
           }
         }
       `,
     });
-    return result.data.users.nodes;
+    return result.data.users;
   } catch (err) {
     Alert.alert(err.message);
     return err;
@@ -57,22 +60,37 @@ const queryList = async (offset: string, limit: string) => {
 
 const Users = () => {
   const [userList, setUserList] = useState([]);
-  const [isLoading, setLoading] = useState(true);
-  const [offset, setOffset] = useState('0');
-  const [limit, setLimit] = useState('20');
+  const [isLoading, setLoading] = useState(false);
+  const [offset, setOffset] = useState(0);
+  const [over, setOver] = useState(false);
+  const limit = 20;
+
   async function fetchList() {
     const users = await queryList(offset, limit);
-    const list = users.map((item: User) => {
-      return item;
-    });
-    setUserList(list);
+    const newList = userList.concat(users.nodes);
+    setUserList(newList);
+    setOver(!users.pageInfo.hasNextPage);
+  }
+
+  async function updateOffset() {
+    setOffset((prevOffset) => prevOffset + limit);
   }
 
   useEffect(() => {
-    fetchList().finally(() => {
-      setLoading(false);
-    });
-  }, []);
+    if (!isLoading) {
+      setLoading(true);
+      fetchList().finally(() => {
+        setLoading(false);
+      });
+    }
+  }, [offset]);
+
+  const handleLoadMore = async () => {
+    if (!isLoading && !over) {
+      await updateOffset();
+      setLoading(true);
+    }
+  };
 
   const renderItem = ({item}: ItemType) => {
     return (
@@ -85,13 +103,27 @@ const Users = () => {
     );
   };
 
+  const listFooter = () => {
+    if (!isLoading) {
+      return null;
+    }
+    return (
+      <View>
+        <ActivityIndicator size="large" color="#000000" />
+      </View>
+    );
+  };
+
   return (
     <SafeAreaView style={styles.safeAreaView}>
-      {isLoading ? (
-        <ActivityIndicator size="large" color="#000000" />
-      ) : (
-        <FlatList data={userList} renderItem={renderItem} contentContainerStyle={{flexGrow: 1}} />
-      )}
+      <FlatList
+        data={userList}
+        renderItem={renderItem}
+        contentContainerStyle={{flexGrow: 1}}
+        onEndReached={handleLoadMore}
+        onEndReachedThreshold={0.2}
+        ListFooterComponent={listFooter}
+      />
     </SafeAreaView>
   );
 };
