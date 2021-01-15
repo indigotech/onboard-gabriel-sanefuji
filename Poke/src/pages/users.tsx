@@ -63,7 +63,6 @@ const Users = () => {
   const [isLoading, setLoading] = useState(false);
   const [offset, setOffset] = useState(0);
   const [over, setOver] = useState(false);
-  const [stop, setStop] = useState(false);
   const limit = 20;
 
   async function fetchList() {
@@ -75,9 +74,6 @@ const Users = () => {
 
   async function updateOffset() {
     setOffset((prevOffset) => prevOffset + limit);
-    if (over) {
-      setStop(true);
-    }
   }
 
   useEffect(() => {
@@ -90,7 +86,7 @@ const Users = () => {
   }, [offset]);
 
   const handleLoadMore = async () => {
-    if (!isLoading && !stop) {
+    if (!isLoading && !over) {
       await updateOffset();
       setLoading(true);
     }
