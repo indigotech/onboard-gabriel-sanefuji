@@ -1,24 +1,47 @@
 import React, {useState} from 'react';
-import {SafeAreaView, StyleSheet, ScrollView, View, Text, StatusBar, Alert} from 'react-native';
-
+import {Alert, SafeAreaView, ScrollView, StatusBar, StyleSheet, Text, View} from 'react-native';
 import {Colors} from 'react-native/Libraries/NewAppScreen';
-
 import {Input} from '../components/inputs';
 import {SubmitButton} from '../components/submit-button';
-import {addUserValidation} from '../validation';
+import {
+  dateFormatValidator,
+  dateValidator,
+  emailValidator,
+  lengthValidator,
+  requiredFieldValidator,
+} from '../validation';
 
-const AddUser = () => {
+export const AddUser = () => {
   const [email, setEmail] = useState('');
   const [name, setName] = useState('');
   const [birthDate, setDate] = useState('');
   const [phone, setPhone] = useState('');
 
+  const requiredError = 'Todos os campos devem estar preenchidos.';
+  const emailError = 'O e-mail foi escrito errado.';
+  const phoneLengthError = 'O número do celular deve ter no mínimo 11 dígitos.';
+  const dateFormatError = 'A data de nascimento deve possuir o formato AAAA-MM-DD';
+  const dateError = 'A data de nascimento possui valores inválidos';
+
   const handleSubmit = async () => {
-    const validationError = addUserValidation(email, name, phone, birthDate);
-    if (!validationError) {
-      Alert.alert('Nice');
+    if (requiredFieldValidator(name, requiredError)) {
+      Alert.alert(requiredError);
+    } else if (requiredFieldValidator(email, requiredError)) {
+      Alert.alert(requiredError);
+    } else if (emailValidator(email, emailError)) {
+      Alert.alert(emailError);
+    } else if (requiredFieldValidator(phone, requiredError)) {
+      Alert.alert(requiredError);
+    } else if (lengthValidator(phone, phoneLengthError, 11)) {
+      Alert.alert(phoneLengthError);
+    } else if (requiredFieldValidator(birthDate, requiredError)) {
+      Alert.alert(requiredError);
+    } else if (dateFormatValidator(birthDate, dateFormatError)) {
+      Alert.alert(dateFormatError);
+    } else if (dateValidator(birthDate)) {
+      Alert.alert(dateError);
     } else {
-      Alert.alert(validationError);
+      Alert.alert('Nice');
     }
   };
 
@@ -28,14 +51,12 @@ const AddUser = () => {
       <SafeAreaView>
         <ScrollView contentInsetAdjustmentBehavior="automatic" style={styles.scrollView}>
           <View style={styles.body}>
-            <>
-              <Text style={styles.simple}>Cadastre um usuário!</Text>
-              <Input name="Nome" text={name} onTextChange={setName} isPassword={false} />
-              <Input name="E-mail" text={email} onTextChange={setEmail} isPassword={false} />
-              <Input name="Celular" text={phone} onTextChange={setPhone} isPassword={false} />
-              <Input name="Data de nascimento" text={birthDate} onTextChange={setDate} isPassword={false} />
-              <SubmitButton text={'Cadastre'} onTap={handleSubmit} />
-            </>
+            <Text style={styles.simple}>Cadastre um usuário!</Text>
+            <Input name="Nome" text={name} onTextChange={setName} isPassword={false} />
+            <Input name="E-mail" text={email} onTextChange={setEmail} isPassword={false} />
+            <Input name="Celular" text={phone} onTextChange={setPhone} isPassword={false} />
+            <Input name="Data de nascimento" text={birthDate} onTextChange={setDate} isPassword={false} />
+            <SubmitButton text={'Cadastre'} onTap={handleSubmit} />
           </View>
         </ScrollView>
       </SafeAreaView>
@@ -81,5 +102,3 @@ const styles = StyleSheet.create({
     textAlign: 'right',
   },
 });
-
-export default AddUser;
