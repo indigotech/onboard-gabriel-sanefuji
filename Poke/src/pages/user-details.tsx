@@ -3,6 +3,14 @@ import React from 'react';
 import {ActivityIndicator, SafeAreaView, StyleSheet, Text, View} from 'react-native';
 import {ItemDetails} from '../components/details-item';
 
+interface UserDetails {
+  name: string;
+  email: string;
+  birthDate: string;
+  phone: string;
+  id: string;
+}
+
 const GET_USER = gql`
   query($id: ID!) {
     user(id: $id) {
@@ -16,7 +24,7 @@ const GET_USER = gql`
 `;
 
 export const UserDetails = (props) => {
-  const {loading, error, data} = useQuery(GET_USER, {
+  const {loading, error, data} = useQuery<{user: UserDetails}, {id: string}>(GET_USER, {
     variables: {id: props.id},
   });
   if (loading) {
