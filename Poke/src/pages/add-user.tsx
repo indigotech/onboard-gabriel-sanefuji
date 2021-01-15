@@ -39,7 +39,15 @@ export const AddUser: NavigationFunctionComponent<Props> = (props: NavigationCom
   const phoneLengthError = 'O número do celular deve ter no mínimo 11 dígitos.';
   const dateFormatError = 'A data de nascimento deve possuir o formato AAAA-MM-DD';
   const dateError = 'A data de nascimento possui valores inválidos';
-  const [createUser] = useMutation<{createUser: User}>(CREATE_USER);
+  const [createUser, {loading}] = useMutation<{createUser: User}>(CREATE_USER, {
+    onError(error) {
+      Alert.alert(error.message);
+    },
+    onCompleted() {
+      Alert.alert('cadastrado');
+      Navigation.pop(props.componentId);
+    },
+  });
 
   const handleSubmit = async () => {
     if (requiredFieldValidator(name, requiredError)) {
