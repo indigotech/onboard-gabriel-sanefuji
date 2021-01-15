@@ -1,19 +1,13 @@
+import {ApolloProvider, gql} from '@apollo/client';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import React, {useState} from 'react';
-import {SafeAreaView, StyleSheet, ScrollView, View, Text, StatusBar, Alert, ActivityIndicator} from 'react-native';
-
+import {ActivityIndicator, Alert, SafeAreaView, ScrollView, StatusBar, StyleSheet, Text, View} from 'react-native';
+import {Navigation, NavigationComponentProps} from 'react-native-navigation';
 import {Colors} from 'react-native/Libraries/NewAppScreen';
-
+import {client} from './src/apollo-client';
 import {Input} from './src/components/inputs';
 import {SubmitButton} from './src/components/submit-button';
 import {emailValidator, lengthValidator, passwordValidator, requiredFieldValidator} from './src/validation';
-import {ApolloClient, InMemoryCache, gql} from '@apollo/client';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import {Navigation, NavigationComponentProps} from 'react-native-navigation';
-
-const client = new ApolloClient({
-  uri: 'https://tq-template-server-sample.herokuapp.com/graphql',
-  cache: new InMemoryCache(),
-});
 
 // Email: admin@taqtile.com.br
 // Password: 1234qwer
@@ -82,9 +76,13 @@ const App = (props: NavigationComponentProps) => {
           component: {
             name: 'Users',
           },
-        }).then(() => {
-          setLoading(false);
-        });
+        })
+          .then(() => {
+            setLoading(false);
+          })
+          .finally(() => {
+            setLoading(false);
+          });
       } else {
         setLoading(false);
       }

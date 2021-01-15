@@ -1,5 +1,8 @@
+import {gql, useMutation} from '@apollo/client';
 import React, {useState} from 'react';
 import {Alert, SafeAreaView, ScrollView, StatusBar, StyleSheet, Text, View} from 'react-native';
+import {Navigation, NavigationComponentProps, NavigationFunctionComponent} from 'react-native-navigation';
+import {Props} from 'react-native-navigation/lib/dist/adapters/TouchablePreview';
 import {Colors} from 'react-native/Libraries/NewAppScreen';
 import {Input} from '../components/inputs';
 import {SubmitButton} from '../components/submit-button';
@@ -11,7 +14,21 @@ import {
   requiredFieldValidator,
 } from '../validation';
 
-export const AddUser = () => {
+interface User {
+  id: string;
+  name: string;
+}
+
+const CREATE_USER = gql`
+  mutation($name: String!, $email: String!, $phone: String!, $birthDate: Date!) {
+    createUser(data: {name: $name, email: $email, phone: $phone, birthDate: $birthDate, role: user}) {
+      id
+      name
+    }
+  }
+`;
+
+export const AddUser: NavigationFunctionComponent<Props> = (props: NavigationComponentProps) => {
   const [email, setEmail] = useState('');
   const [name, setName] = useState('');
   const [birthDate, setDate] = useState('');
@@ -22,6 +39,7 @@ export const AddUser = () => {
   const phoneLengthError = 'O número do celular deve ter no mínimo 11 dígitos.';
   const dateFormatError = 'A data de nascimento deve possuir o formato AAAA-MM-DD';
   const dateError = 'A data de nascimento possui valores inválidos';
+  const [createUser] = useMutation<{createUser: User}>(CREATE_USER);
 
   const handleSubmit = async () => {
     if (requiredFieldValidator(name, requiredError)) {
@@ -42,6 +60,7 @@ export const AddUser = () => {
       Alert.alert(dateError);
     } else {
       Alert.alert('Nice');
+      Navigation.pop(props.componentId);
     }
   };
 
