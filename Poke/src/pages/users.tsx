@@ -33,7 +33,7 @@ const client = new ApolloClient({
   cache: new InMemoryCache(),
 });
 
-const queryList = async (offset: number, limit: number) => {
+const queryList = async (offset: number, limit: number): Promise<JSON> => {
   try {
     const result = await client.query({
       query: gql`
@@ -63,22 +63,20 @@ const Users = () => {
   const [isLoading, setLoading] = useState(false);
   const [offset, setOffset] = useState(0);
   const [over, setOver] = useState(false);
+  const [stop, setStop] = useState(false);
   const limit = 20;
 
   async function fetchList() {
     const users = await queryList(offset, limit);
-    const list = users.nodes.map((item: User) => {
-      return item;
-    });
-    const newList = userList.concat(list);
+    const newList = userList.concat(users.nodes);
     setUserList(newList);
     setOver(!users.pageInfo.hasNextPage);
   }
 
-  async function updateOffset(newOffset: number) {
-    setOffset(newOffset);
-    if (offset + limit > 142) {
-      setOver(true);
+  async function updateOffset() {
+    setOffset((prevOffset) => prevOffset + limit);
+    if (over) {
+      setStop(true);
     }
   }
 
@@ -92,9 +90,8 @@ const Users = () => {
   }, [offset]);
 
   const handleLoadMore = async () => {
-    if (!isLoading && !over) {
-      const newOffset = offset + limit;
-      await updateOffset(newOffset);
+    if (!isLoading && !stop) {
+      await updateOffset();
       setLoading(true);
     }
   };
