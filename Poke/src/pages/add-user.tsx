@@ -1,7 +1,8 @@
-import {ApolloProvider, gql, useMutation} from '@apollo/client';
+import {gql, useMutation} from '@apollo/client';
 import React, {useState} from 'react';
 import {Alert, SafeAreaView, ScrollView, StatusBar, StyleSheet, Text, View} from 'react-native';
-import {NavigationComponentProps, NavigationFunctionComponent} from 'react-native-navigation';
+import {Navigation, NavigationComponentProps, NavigationFunctionComponent} from 'react-native-navigation';
+import {Props} from 'react-native-navigation/lib/dist/adapters/TouchablePreview';
 import {Colors} from 'react-native/Libraries/NewAppScreen';
 import {Input} from '../components/inputs';
 import {SubmitButton} from '../components/submit-button';
@@ -12,8 +13,6 @@ import {
   lengthValidator,
   requiredFieldValidator,
 } from '../validation';
-
-interface Props {}
 
 interface User {
   id: string;
@@ -61,11 +60,12 @@ export const AddUser: NavigationFunctionComponent<Props> = (props: NavigationCom
       Alert.alert(dateError);
     } else {
       Alert.alert('Nice');
+      Navigation.pop(props.componentId);
     }
   };
 
   return (
-    <ApolloProvider client={client}>
+    <>
       <StatusBar barStyle="dark-content" />
       <SafeAreaView>
         <ScrollView contentInsetAdjustmentBehavior="automatic" style={styles.scrollView}>
@@ -79,7 +79,7 @@ export const AddUser: NavigationFunctionComponent<Props> = (props: NavigationCom
           </View>
         </ScrollView>
       </SafeAreaView>
-    </ApolloProvider>
+    </>
   );
 };
 
