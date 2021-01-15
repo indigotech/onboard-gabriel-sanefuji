@@ -3,9 +3,9 @@ import {SafeAreaView, StyleSheet, ScrollView, View, Text, StatusBar, Alert, Acti
 
 import {Colors} from 'react-native/Libraries/NewAppScreen';
 
-import {EmailInput, PasswordInput} from './src/components/login-input';
+import {Input} from './src/components/inputs';
 import {SubmitButton} from './src/components/submit-button';
-import {validation} from './src/validation';
+import {emailValidator, lengthValidator, passwordValidator, requiredFieldValidator} from './src/validation';
 import {ApolloClient, InMemoryCache, gql} from '@apollo/client';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {Navigation, NavigationComponentProps} from 'react-native-navigation';
@@ -58,31 +58,39 @@ const App = (props: NavigationComponentProps) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isLoading, setLoading] = useState(false);
+  const emailRequiredError = 'O campo de e-mail deve estar preenchido.';
+  const passwordRequiredError = 'O campo de senha deve estar preenchido.';
+  const emailError = 'O e-mail foi escrito errado.';
+  const passwordLengthError = 'A senha deve ter no mínimo 7 caracteres.';
+  const passwordError = 'A senha deve ter no mínimo um caracter e um número.';
+
   const handleSubmit = async () => {
-    const validationError = validation(email, password);
-    if (!validationError) {
+    if (requiredFieldValidator(email, emailRequiredError)) {
+      Alert.alert(emailRequiredError);
+    } else if (emailValidator(email, emailError)) {
+      Alert.alert(emailError);
+    } else if (requiredFieldValidator(password, passwordRequiredError)) {
+      Alert.alert(passwordRequiredError);
+    } else if (lengthValidator(password, passwordLengthError, 7)) {
+      Alert.alert(passwordLengthError);
+    } else if (passwordValidator(password, passwordError)) {
+      Alert.alert(passwordError);
+    } else {
       setLoading(true);
       if (await login(email, password)) {
         Navigation.push(props.componentId, {
           component: {
-            name: 'Users', // Push the screen registered with the 'Settings' key
-            options: {
-              // Optional options object to configure the screen
-              topBar: {
-                title: {
-                  text: 'Users', // Set the TopBar title of the new Screen
-                },
-              },
-            },
+            name: 'Users',
           },
         }).then(() => {
           setLoading(false);
         });
+      } else {
+        setLoading(false);
       }
-    } else {
-      Alert.alert(validationError);
     }
   };
+
   return (
     <>
       <StatusBar barStyle="dark-content" />
@@ -94,9 +102,9 @@ const App = (props: NavigationComponentProps) => {
             ) : (
               <>
                 <Text style={styles.simple}>Bem vindo(a) à Taqtile!</Text>
-                <EmailInput text={email} onTextChange={setEmail} />
-                <PasswordInput text={password} onTextChange={setPassword} />
-                <SubmitButton onTap={handleSubmit} />
+                <Input name="E-mail" text={email} onTextChange={setEmail} isPassword={false} />
+                <Input name="Senha" text={password} onTextChange={setPassword} isPassword={true} />
+                <SubmitButton text={'Entrar'} onTap={handleSubmit} />
               </>
             )}
           </View>

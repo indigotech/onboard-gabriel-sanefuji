@@ -1,8 +1,9 @@
 import React, {useEffect, useState} from 'react';
-import {SafeAreaView, StyleSheet, View, Text, FlatList, Alert, ActivityIndicator} from 'react-native';
+import {SafeAreaView, StyleSheet, View, Text, FlatList, Alert, ActivityIndicator, TouchableOpacity} from 'react-native';
 import {ApolloClient, createHttpLink, gql, InMemoryCache} from '@apollo/client';
 import {setContext} from '@apollo/client/link/context';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {Navigation, NavigationComponentProps} from 'react-native-navigation';
 
 interface User {
   name: string;
@@ -58,7 +59,7 @@ const queryList = async (offset: number, limit: number): Promise<JSON> => {
   }
 };
 
-const Users = () => {
+const Users = (props: NavigationComponentProps) => {
   const [userList, setUserList] = useState([]);
   const [isLoading, setLoading] = useState(false);
   const [offset, setOffset] = useState(0);
@@ -114,18 +115,41 @@ const Users = () => {
     );
   };
 
+  const handlePress = () => {
+    Navigation.push(props.componentId, {
+      component: {
+        name: 'Add User',
+      },
+    });
+  };
+
   return (
     <SafeAreaView style={styles.safeAreaView}>
-      <FlatList
-        data={userList}
-        renderItem={renderItem}
-        contentContainerStyle={{flexGrow: 1}}
-        onEndReached={handleLoadMore}
-        onEndReachedThreshold={0.2}
-        ListFooterComponent={listFooter}
-      />
+      {isLoading ? (
+        <ActivityIndicator size="large" color="#000000" />
+      ) : (
+        <FlatList
+          data={userList}
+          renderItem={renderItem}
+          contentContainerStyle={{flexGrow: 1}}
+          onEndReached={handleLoadMore}
+          onEndReachedThreshold={0.2}
+          ListFooterComponent={listFooter}
+        />
+      )}
+      <TouchableOpacity style={styles.button} onPress={handlePress}>
+        <Text style={styles.text}>+</Text>
+      </TouchableOpacity>
     </SafeAreaView>
   );
+};
+
+Users.options = {
+  topBar: {
+    title: {
+      text: 'Users',
+    },
+  },
 };
 
 const styles = StyleSheet.create({
@@ -154,6 +178,26 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.15,
     shadowOffset: {width: 0, height: 2},
     elevation: 5,
+  },
+  button: {
+    flex: 1,
+    justifyContent: 'center',
+    width: 80,
+    height: 80,
+    borderRadius: 40,
+    backgroundColor: '#4d4a4a',
+    position: 'absolute',
+    bottom: 40,
+    right: 15,
+    shadowRadius: 5,
+    shadowOpacity: 0.5,
+    shadowOffset: {width: 0, height: 0},
+    elevation: 5,
+  },
+  text: {
+    alignSelf: 'center',
+    color: '#ffffff',
+    fontSize: 30,
   },
 });
 export default Users;
