@@ -115,6 +115,14 @@ const Users = (props: NavigationComponentProps) => {
     );
   };
 
+  const handlePress = () => {
+    Navigation.push(props.componentId, {
+      component: {
+        name: 'Add User',
+      },
+    });
+  };
+
   return (
     <SafeAreaView style={styles.safeAreaView}>
       {isLoading ? (
@@ -129,15 +137,7 @@ const Users = (props: NavigationComponentProps) => {
           ListFooterComponent={listFooter}
         />
       )}
-      <TouchableOpacity
-        style={styles.button}
-        onPress={() => {
-          Navigation.push(props.componentId, {
-            component: {
-              name: 'Add User',
-            },
-          });
-        }}>
+      <TouchableOpacity style={styles.button} onPress={handlePress}>
         <Text style={styles.text}>+</Text>
       </TouchableOpacity>
     </SafeAreaView>
