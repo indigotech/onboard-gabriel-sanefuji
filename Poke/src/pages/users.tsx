@@ -75,12 +75,24 @@ const Users = (props: NavigationComponentProps) => {
 
   const renderItem = ({item}: ItemType) => {
     return (
-      <View style={styles.box}>
-        <Text style={styles.name} key={item.id}>
-          {item.name}
-        </Text>
-        <Text style={styles.email}>{item.email}</Text>
-      </View>
+      <TouchableOpacity
+        onPress={() => {
+          Navigation.push(props.componentId, {
+            component: {
+              name: 'User details',
+              passProps: {
+                id: item.id,
+              },
+            },
+          });
+        }}>
+        <View style={styles.box}>
+          <Text style={styles.name} key={item.id}>
+            {item.name}
+          </Text>
+          <Text style={styles.email}>{item.email}</Text>
+        </View>
+      </TouchableOpacity>
     );
   };
 
