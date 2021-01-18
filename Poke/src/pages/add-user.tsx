@@ -67,8 +67,7 @@ export const AddUser: NavigationFunctionComponent<Props> = (props: NavigationCom
     } else if (dateValidator(birthDate)) {
       Alert.alert(dateError);
     } else {
-      createUser({variables: {name: name, email: email, phone: phone, birthDate: birthDate}});
-      Navigation.pop(props.componentId);
+      await createUser({variables: {name: name, email: email, phone: phone, birthDate: birthDate}});
     }
   };
 
