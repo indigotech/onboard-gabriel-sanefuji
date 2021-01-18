@@ -1,4 +1,4 @@
-import {ApolloProvider, gql} from '@apollo/client';
+import {gql} from '@apollo/client';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import React, {useState} from 'react';
 import {ActivityIndicator, Alert, SafeAreaView, ScrollView, StatusBar, StyleSheet, Text, View} from 'react-native';
@@ -100,7 +100,7 @@ const App = (props: NavigationComponentProps) => {
             ) : (
               <>
                 <Text style={styles.simple}>Bem vindo(a) à Taqtile!</Text>
-                <Input name="E-mail" text={email} onTextChange={setEmail} isPassword={false} />
+                <Input name="E-mail" text={email} onTextChange={setEmail} />
                 <Input name="Senha" text={password} onTextChange={setPassword} isPassword={true} />
                 <SubmitButton text={'Entrar'} onTap={handleSubmit} />
               </>

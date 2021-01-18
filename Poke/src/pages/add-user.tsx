@@ -1,6 +1,6 @@
 import {gql, useMutation} from '@apollo/client';
 import React, {useState} from 'react';
-import {Alert, SafeAreaView, ScrollView, StatusBar, StyleSheet, Text, View} from 'react-native';
+import {ActivityIndicator, Alert, SafeAreaView, ScrollView, StatusBar, StyleSheet, Text, View} from 'react-native';
 import {Navigation, NavigationComponentProps, NavigationFunctionComponent} from 'react-native-navigation';
 import {Props} from 'react-native-navigation/lib/dist/adapters/TouchablePreview';
 import {Colors} from 'react-native/Libraries/NewAppScreen';
@@ -39,7 +39,15 @@ export const AddUser: NavigationFunctionComponent<Props> = (props: NavigationCom
   const phoneLengthError = 'O número do celular deve ter no mínimo 11 dígitos.';
   const dateFormatError = 'A data de nascimento deve possuir o formato AAAA-MM-DD';
   const dateError = 'A data de nascimento possui valores inválidos';
-  const [createUser] = useMutation<{createUser: User}>(CREATE_USER);
+  const [createUser, {loading}] = useMutation<{createUser: User}>(CREATE_USER, {
+    onError(error) {
+      Alert.alert(error.message);
+    },
+    onCompleted() {
+      Alert.alert('cadastrado');
+      Navigation.pop(props.componentId);
+    },
+  });
 
   const handleSubmit = async () => {
     if (requiredFieldValidator(name, requiredError)) {
@@ -59,8 +67,7 @@ export const AddUser: NavigationFunctionComponent<Props> = (props: NavigationCom
     } else if (dateValidator(birthDate)) {
       Alert.alert(dateError);
     } else {
-      Alert.alert('Nice');
-      Navigation.pop(props.componentId);
+      await createUser({variables: {name, email, phone, birthDate}});
     }
   };
 
@@ -70,12 +77,18 @@ export const AddUser: NavigationFunctionComponent<Props> = (props: NavigationCom
       <SafeAreaView>
         <ScrollView contentInsetAdjustmentBehavior="automatic" style={styles.scrollView}>
           <View style={styles.body}>
-            <Text style={styles.simple}>Cadastre um usuário!</Text>
-            <Input name="Nome" text={name} onTextChange={setName} isPassword={false} />
-            <Input name="E-mail" text={email} onTextChange={setEmail} isPassword={false} />
-            <Input name="Celular" text={phone} onTextChange={setPhone} isPassword={false} />
-            <Input name="Data de nascimento" text={birthDate} onTextChange={setDate} isPassword={false} />
-            <SubmitButton text={'Cadastre'} onTap={handleSubmit} />
+            {loading ? (
+              <ActivityIndicator size="large" color="#000000" />
+            ) : (
+              <>
+                <Text style={styles.simple}>Cadastre um usuário!</Text>
+                <Input name="Nome" text={name} onTextChange={setName} />
+                <Input name="E-mail" text={email} onTextChange={setEmail} />
+                <Input name="Celular" text={phone} onTextChange={setPhone} />
+                <Input name="Data de nascimento" text={birthDate} onTextChange={setDate} />
+                <SubmitButton text={'Cadastre'} onTap={handleSubmit} />
+              </>
+            )}
           </View>
         </ScrollView>
       </SafeAreaView>
