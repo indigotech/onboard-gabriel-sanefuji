@@ -19,5 +19,5 @@ const authLink = setContext(async (_, {headers}) => {
 export const client = new ApolloClient({
   link: authLink.concat(httpLink),
   cache: new InMemoryCache(),
-  uri: 'https://tq-template-server-sample.herokuapp.com/graphql'
+  uri: 'https://tq-template-server-sample.herokuapp.com/graphql',
 });

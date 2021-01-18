@@ -1,13 +1,13 @@
 import {gql} from '@apollo/client';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import React, {useState} from 'react';
-import {ActivityIndicator, Alert, SafeAreaView, ScrollView, StatusBar, StyleSheet, Text, View} from 'react-native';
+import {ActivityIndicator, Alert, SafeAreaView, StatusBar} from 'react-native';
 import {Navigation, NavigationComponentProps} from 'react-native-navigation';
-import {Colors} from 'react-native/Libraries/NewAppScreen';
 import {client} from './src/apollo-client';
 import {Input} from './src/components/inputs';
 import {SubmitButton} from './src/components/submit-button';
 import {emailValidator, lengthValidator, passwordValidator, requiredFieldValidator} from './src/validation';
+import {BackgroungStyled, ScrollStyled, Title} from './src/styles';
 
 // Email: admin@taqtile.com.br
 // Password: 1234qwer
@@ -93,54 +93,23 @@ const App = (props: NavigationComponentProps) => {
     <>
       <StatusBar barStyle="dark-content" />
       <SafeAreaView>
-        <ScrollView contentInsetAdjustmentBehavior="automatic" style={styles.scrollView}>
-          <View style={styles.body}>
+        <ScrollStyled contentInsetAdjustmentBehavior="automatic">
+          <BackgroungStyled>
             {isLoading ? (
               <ActivityIndicator size="large" color="#000000" />
             ) : (
               <>
-                <Text style={styles.simple}>Bem vindo(a) à Taqtile!</Text>
+                <Title>Bem vindo(a) à Taqtile!</Title>
                 <Input name="E-mail" text={email} onTextChange={setEmail} />
                 <Input name="Senha" text={password} onTextChange={setPassword} isPassword={true} />
                 <SubmitButton text={'Entrar'} onTap={handleSubmit} />
               </>
             )}
-          </View>
-        </ScrollView>
+          </BackgroungStyled>
+        </ScrollStyled>
       </SafeAreaView>
     </>
   );
 };
-
-const styles = StyleSheet.create({
-  scrollView: {
-    backgroundColor: Colors.lighter,
-  },
-  engine: {
-    position: 'absolute',
-    right: 0,
-  },
-  body: {
-    backgroundColor: Colors.white,
-    flex: 1,
-    width: '100%',
-    height: '100%',
-  },
-  simple: {
-    fontSize: 24,
-    fontWeight: '600',
-    color: Colors.black,
-    textAlign: 'center',
-    marginTop: 20,
-  },
-  footer: {
-    color: Colors.dark,
-    fontSize: 12,
-    fontWeight: '600',
-    padding: 4,
-    paddingRight: 12,
-    textAlign: 'right',
-  },
-});
 
 export default App;

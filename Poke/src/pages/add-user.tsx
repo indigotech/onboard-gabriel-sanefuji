@@ -1,11 +1,11 @@
 import {gql, useMutation} from '@apollo/client';
 import React, {useState} from 'react';
-import {ActivityIndicator, Alert, SafeAreaView, ScrollView, StatusBar, StyleSheet, Text, View} from 'react-native';
+import {ActivityIndicator, Alert, SafeAreaView, StatusBar} from 'react-native';
 import {Navigation, NavigationComponentProps, NavigationFunctionComponent} from 'react-native-navigation';
 import {Props} from 'react-native-navigation/lib/dist/adapters/TouchablePreview';
-import {Colors} from 'react-native/Libraries/NewAppScreen';
 import {Input} from '../components/inputs';
 import {SubmitButton} from '../components/submit-button';
+import {BackgroungStyled, ScrollStyled, Title} from '../styles';
 import {
   dateFormatValidator,
   dateValidator,
@@ -75,13 +75,13 @@ export const AddUser: NavigationFunctionComponent<Props> = (props: NavigationCom
     <>
       <StatusBar barStyle="dark-content" />
       <SafeAreaView>
-        <ScrollView contentInsetAdjustmentBehavior="automatic" style={styles.scrollView}>
-          <View style={styles.body}>
+        <ScrollStyled contentInsetAdjustmentBehavior="automatic">
+          <BackgroungStyled>
             {loading ? (
               <ActivityIndicator size="large" color="#000000" />
             ) : (
               <>
-                <Text style={styles.simple}>Cadastre um usuário!</Text>
+                <Title>Cadastre um usuário!</Title>
                 <Input name="Nome" text={name} onTextChange={setName} />
                 <Input name="E-mail" text={email} onTextChange={setEmail} />
                 <Input name="Celular" text={phone} onTextChange={setPhone} />
@@ -89,8 +89,8 @@ export const AddUser: NavigationFunctionComponent<Props> = (props: NavigationCom
                 <SubmitButton text={'Cadastre'} onTap={handleSubmit} />
               </>
             )}
-          </View>
-        </ScrollView>
+          </BackgroungStyled>
+        </ScrollStyled>
       </SafeAreaView>
     </>
   );
@@ -103,34 +103,3 @@ AddUser.options = {
     },
   },
 };
-
-const styles = StyleSheet.create({
-  scrollView: {
-    backgroundColor: Colors.lighter,
-  },
-  engine: {
-    position: 'absolute',
-    right: 0,
-  },
-  body: {
-    backgroundColor: Colors.white,
-    flex: 1,
-    width: '100%',
-    height: '100%',
-  },
-  simple: {
-    fontSize: 24,
-    fontWeight: '600',
-    color: Colors.black,
-    textAlign: 'center',
-    marginTop: 20,
-  },
-  footer: {
-    color: Colors.dark,
-    fontSize: 12,
-    fontWeight: '600',
-    padding: 4,
-    paddingRight: 12,
-    textAlign: 'right',
-  },
-});

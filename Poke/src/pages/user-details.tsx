@@ -1,7 +1,8 @@
 import {gql, useQuery} from '@apollo/client';
 import React from 'react';
-import {ActivityIndicator, SafeAreaView, StyleSheet, Text, View} from 'react-native';
+import {ActivityIndicator, SafeAreaView, Text, View} from 'react-native';
 import {ItemDetails} from '../components/details-item';
+import {DetailsNameStyled, SeparatorLineStyled} from '../styles';
 
 interface UserDetails {
   name: string;
@@ -36,11 +37,11 @@ export const UserDetails = (props) => {
   return (
     <SafeAreaView>
       <View>
-        <Text style={styles.name}> {data.user.name} </Text>
+        <DetailsNameStyled> {data.user.name} </DetailsNameStyled>
         <ItemDetails name="E-mail" content={data.user.email} />
         <ItemDetails name="Data de nascimento" content={data.user.birthDate} />
         <ItemDetails name="Celular" content={data.user.phone} />
-        <View style={styles.line} />
+        <SeparatorLineStyled />
       </View>
     </SafeAreaView>
   );
@@ -53,19 +54,3 @@ UserDetails.options = {
     },
   },
 };
-
-const styles = StyleSheet.create({
-  name: {
-    fontSize: 25,
-    fontWeight: 'bold',
-    alignSelf: 'center',
-    padding: 15,
-  },
-  line: {
-    borderBottomColor: '#c8cbce',
-    borderBottomWidth: 1,
-    margin: 10,
-    marginLeft: 30,
-    marginRight: 30,
-  },
-});
