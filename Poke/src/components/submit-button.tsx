@@ -1,5 +1,5 @@
 import React from 'react';
-import {StyleSheet, View, Button} from 'react-native';
+import {ButtonStyled, ButtonTextStyled} from '../styles';
 
 interface SubmitButtonProps {
   text: string;
@@ -8,15 +8,8 @@ interface SubmitButtonProps {
 
 export const SubmitButton: React.FC<SubmitButtonProps> = (props) => {
   return (
-    <View style={styles.input}>
-      <Button title={props.text} onPress={props.onTap} />
-    </View>
+    <ButtonStyled onPress={props.onTap}>
+      <ButtonTextStyled>{props.text}</ButtonTextStyled>
+    </ButtonStyled>
   );
 };
-
-const styles = StyleSheet.create({
-  input: {
-    margin: 20,
-    marginTop: 30,
-  },
-});

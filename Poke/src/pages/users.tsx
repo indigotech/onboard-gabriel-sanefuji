@@ -1,8 +1,16 @@
 import {gql} from '@apollo/client';
 import React, {useEffect, useState} from 'react';
-import {ActivityIndicator, Alert, FlatList, SafeAreaView, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {ActivityIndicator, Alert, FlatList, TouchableOpacity, View} from 'react-native';
 import {Navigation, NavigationComponentProps} from 'react-native-navigation';
 import {client} from '../apollo-client';
+import {
+  AddButtonStyled,
+  ButtonPlusSign,
+  ListBackgroundStyled,
+  ListBoxStyled,
+  ListEmailStyled,
+  ListUsernameStyled,
+} from '../styles';
 
 interface User {
   name: string;
@@ -86,12 +94,10 @@ const Users = (props: NavigationComponentProps) => {
             },
           });
         }}>
-        <View style={styles.box}>
-          <Text style={styles.name} key={item.id}>
-            {item.name}
-          </Text>
-          <Text style={styles.email}>{item.email}</Text>
-        </View>
+        <ListBoxStyled>
+          <ListUsernameStyled key={item.id}>{item.name}</ListUsernameStyled>
+          <ListEmailStyled>{item.email}</ListEmailStyled>
+        </ListBoxStyled>
       </TouchableOpacity>
     );
   };
@@ -116,7 +122,7 @@ const Users = (props: NavigationComponentProps) => {
   };
 
   return (
-    <SafeAreaView style={styles.safeAreaView}>
+    <ListBackgroundStyled>
       <FlatList
         data={userList}
         renderItem={renderItem}
@@ -125,10 +131,10 @@ const Users = (props: NavigationComponentProps) => {
         onEndReachedThreshold={0.2}
         ListFooterComponent={listFooter}
       />
-      <TouchableOpacity style={styles.button} onPress={handlePress}>
-        <Text style={styles.text}>+</Text>
-      </TouchableOpacity>
-    </SafeAreaView>
+      <AddButtonStyled onPress={handlePress}>
+        <ButtonPlusSign> + </ButtonPlusSign>
+      </AddButtonStyled>
+    </ListBackgroundStyled>
   );
 };
 
@@ -140,52 +146,4 @@ Users.options = {
   },
 };
 
-const styles = StyleSheet.create({
-  safeAreaView: {
-    flex: 1,
-    backgroundColor: '#e6eaee',
-  },
-  name: {
-    padding: 5,
-    fontWeight: 'bold',
-  },
-  email: {
-    alignItems: 'flex-end',
-    left: 5,
-  },
-  box: {
-    borderRadius: 22,
-    color: '#000000',
-    backgroundColor: '#ffffff',
-    borderWidth: 0.5,
-    padding: 10,
-    margin: 5,
-    marginTop: 10,
-    flexDirection: 'column',
-    shadowRadius: 2,
-    shadowOpacity: 0.15,
-    shadowOffset: {width: 0, height: 2},
-    elevation: 5,
-  },
-  button: {
-    flex: 1,
-    justifyContent: 'center',
-    width: 80,
-    height: 80,
-    borderRadius: 40,
-    backgroundColor: '#4d4a4a',
-    position: 'absolute',
-    bottom: 40,
-    right: 15,
-    shadowRadius: 5,
-    shadowOpacity: 0.5,
-    shadowOffset: {width: 0, height: 0},
-    elevation: 5,
-  },
-  text: {
-    alignSelf: 'center',
-    color: '#ffffff',
-    fontSize: 30,
-  },
-});
 export default Users;
