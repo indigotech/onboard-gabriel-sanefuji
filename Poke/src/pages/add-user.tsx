@@ -67,7 +67,7 @@ export const AddUser: NavigationFunctionComponent<Props> = (props: NavigationCom
     } else if (dateValidator(birthDate)) {
       Alert.alert(dateError);
     } else {
-      await createUser({variables: {name: name, email: email, phone: phone, birthDate: birthDate}});
+      await createUser({variables: {name, email, phone, birthDate}});
     }
   };
 
@@ -82,10 +82,10 @@ export const AddUser: NavigationFunctionComponent<Props> = (props: NavigationCom
             ) : (
               <>
                 <Text style={styles.simple}>Cadastre um usuário!</Text>
-                <Input name="Nome" text={name} onTextChange={setName} isPassword={false} />
-                <Input name="E-mail" text={email} onTextChange={setEmail} isPassword={false} />
-                <Input name="Celular" text={phone} onTextChange={setPhone} isPassword={false} />
-                <Input name="Data de nascimento" text={birthDate} onTextChange={setDate} isPassword={false} />
+                <Input name="Nome" text={name} onTextChange={setName} />
+                <Input name="E-mail" text={email} onTextChange={setEmail} />
+                <Input name="Celular" text={phone} onTextChange={setPhone} />
+                <Input name="Data de nascimento" text={birthDate} onTextChange={setDate} />
                 <SubmitButton text={'Cadastre'} onTap={handleSubmit} />
               </>
             )}

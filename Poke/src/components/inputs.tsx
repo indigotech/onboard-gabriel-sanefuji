@@ -4,7 +4,7 @@ import {StyleSheet, View, Text, TextInput} from 'react-native';
 interface InputProps {
   name: string;
   text: string;
-  isPassword: boolean;
+  isPassword?: boolean;
   onTextChange: (text: string) => void;
 }
 
@@ -20,6 +20,10 @@ export const Input: React.FC<InputProps> = (props) => {
       />
     </View>
   );
+};
+
+Input.defaultProps = {
+  isPassword: false,
 };
 
 const styles = StyleSheet.create({
